@@ -1,37 +1,38 @@
 <template>
-  <h1>{{ title }}</h1>
-  <div to=".modals" v-if="showModal">
-    <Modal theme="sale" @close="toggleModal">
-      <template v-slot:links>
-        <a href="#">Sign up</a>
-        <a href="#">More info</a>
-      </template>
-      <h1>Hello</h1>
-      <p>This is the content</p>
-    </Modal>
-  </div>
-
-  <button @click="toggleModal">Open Modal</button>
-  
+  <h1>Reaction Timer</h1>
+  <button @click="start" :disabled="isPlaying">Play</button>
+  <Block v-if="isPlaying" :delay="delay" @end="endGame"/>
+  <Results v-if="showResults" :score="score"/>
 </template>
 
 <script>
-import Modal from './components/Modal.vue';
+import Block from './components/Block.vue';
+import Results from './components/Results.vue'
 
 export default {
   name: 'App',
-  components: { Modal },
+  components: { Block, Results },
   data() {
     return {
-      title: 'My First Vue App',
-      showModal: false
+      isPlaying: false,
+      delay: null,
+      score: null,
+      showResults: false
     }
   },
   methods: {
-    toggleModal() {
-      this.showModal = !this.showModal;
+    start() {
+      this.delay = 2000 + Math.random() * 5000;
+      this.isPlaying = true;
+      this.showResults = false;
+    },
+    endGame(reactionTime) {
+      this.score = reactionTime;
+      this.isPlaying = false;
+      this.showResults = true;
     }
   }
+  
   
 }
 </script>
@@ -42,7 +43,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #444;
   margin-top: 60px;
 }
 </style>
